@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  .main.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 簡訊發送完成
+
+        // Report Table
+        table.table.table-striped
+          thead
+            tr
+              th 項目
+              th 數值
+          tbody
+            tr
+              th 訊息則數（過長會超過一則）
+              th #{messageCount}
+            tr
+              th 電話號碼
+              th #{to}
+            tr
+              th Message ID
+              th #{messageId}
+            tr
+              th 傳送狀態（0為正常）
+              th #{status}
+            tr
+              th 餘額
+              th #{remainingBalance}
+            tr
+              th 費用
+              th #{messagePrice}
+            tr
+              th 網路辨識碼
+              th #{network}

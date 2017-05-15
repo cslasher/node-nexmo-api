@@ -2,8 +2,13 @@
   "name": "nexmo",
   "version": "1.0.0",
   "description": "Web front for testing Nexmo APIs.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "build-css": "stylus source/stylesheets/index.styl -o static/css",
+    "watch-css": "stylus source/stylesheets/index.styl -o static/css -w",
+    "clean": "rm -rf static/css && mkdir -p static/css",
+    "build": "npm run clean && npm run build-css",
+    "watch": "npm run clean && npm run watch-css & nodemon server -e js,pug",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -11,5 +16,13 @@
     "url": "git@bitbucket.org/edwin-nine-yi/nexmo-apis.git"
   },
   "author": "Edwin Liu",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "morgan": "^1.8.1",
+    "nodemon": "^1.11.0",
+    "pug": "^2.0.0-rc.1",
+    "request": "^2.81.0"
+  }
 }

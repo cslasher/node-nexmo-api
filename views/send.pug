@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  .main.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 發送簡訊
+
+        // register form
+        form(method='POST' action='/send')
+          div.form-group
+            label(for='phone') 手機號碼:
+            input#name.form-control(type='text', placeholder='手機號碼' name='phone')
+          div.form-group
+            label(for='message') 簡訊內容:
+            input#email.form-control(type='text', placeholder='簡訊內容' name='message')
+          button.btn.btn-primary(type='submit') 送出
