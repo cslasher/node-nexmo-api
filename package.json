@@ -1,0 +1,15 @@
+{
+  "name": "nexmo",
+  "version": "1.0.0",
+  "description": "Web front for testing Nexmo APIs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org/edwin-nine-yi/nexmo-apis.git"
+  },
+  "author": "Edwin Liu",
+  "license": "ISC"
+}
