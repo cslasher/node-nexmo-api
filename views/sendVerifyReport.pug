@@ -28,5 +28,5 @@ block content
           div.form-group
             label(for='code') 驗證碼:
             input#code.form-control(type='text', placeholder='輸入驗證碼' name='code')
-            input#request.form-control(type='hidden', name='requestID', value=#{requestID})
+            input#request.form-control(type='hidden', name='requestID', value=`${requestID}`)
           button.btn.btn-primary(type='submit') 送出

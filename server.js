@@ -24,7 +24,7 @@ var sendParam =
 		text: '測試 2！！',
 		type: 'unicode'
 	},
-		json: true
+	json: true
 };
 
 var sendVerifyParam = {
@@ -32,31 +32,33 @@ var sendVerifyParam = {
 	url: 'https://api.nexmo.com/verify/json',
 	headers:
 	{
-	'content-type': 'application/json'
+		'content-type': 'application/json'
 	},
 	body:
 	{
 		api_key: process.env.API_KEY,
 		api_secret: process.env.API_SECRET,
 		number: '<phoneNumber>',
-		brand: 'MyApp'
-	}
+		brand: 'Test APP'
+	},
+	json: true
 }
 
 var checkVerifyParam = {
 	method: 'POST',
 	url: 'https://api.nexmo.com/verify/check/json',
 	headers:
-	{ 'cache-control': 'no-cache',
-	'content-type': 'application/json' },
-	body:
 	{
-		api_key: process.env.API_KEY,
-		api_secret: process.env.API_SECRET,
-		request_id: '<request_id>',
-		code: '<code>'
+		'content-type': 'application/json' },
+		body:
+		{
+			api_key: process.env.API_KEY,
+			api_secret: process.env.API_SECRET,
+			request_id: '<request_id>',
+			code: '<code>'
+		},
+		json: true
 	}
-}
 
 app.use(bodyParser.urlencoded({extended: false}))
 
@@ -64,67 +66,65 @@ app.set('view engine', 'pug')
 
 app.get('/', function(req, res) {
 	res.render('index', {title: 'Nexmo 簡訊測試'})
-	// res.render('send', {title: '發送簡訊'})
-
 })
 
 app.post('/send', function(req, res) {
 	sendParam.body.to = req.body.phone
 	sendParam.body.text = req.body.message
 	request(sendParam, function (error, response, body) {
-	  if (error) throw new Error(error)
+		if (error) throw new Error(error)
 
-	  console.log('request: ', sendParam)
-	  console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
-	  console.log('body:', body) // Print the HTML for the Google homepage.
-	  res.render('sendReport', {
-	  	title: '簡訊發送結果',
-	  	messageCount: body['message-count'],
-	  	to: body['messages'][0]['to'],
-	  	messageId: body['messages'][0]['message-id'],
-	  	status: body['messages'][0]['status'],
-	  	remainingBalance: body['messages'][0]['remaining-balance'],
-	  	messagePrice: body['messages'][0]['message-price'],
-	  	network: body['messages'][0]['network']
-	  })
+		console.log('request: ', sendParam)
+  		console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
+  		console.log('body:', body) // Print the HTML for the Google homepage.
+  		res.render('sendReport', {
+  			title: '簡訊發送結果',
+  			messageCount: body['message-count'],
+  			to: body['messages'][0]['to'],
+  			messageID: body['messages'][0]['message-id'],
+  			status: body['messages'][0]['status'],
+  			remainingBalance: body['messages'][0]['remaining-balance'],
+  			messagePrice: body['messages'][0]['message-price'],
+  			network: body['messages'][0]['network']
+  		})
 	});
 })
 
 app.post('/sendVerify', function(req, res) {
 	sendVerifyParam.body.number = req.body.phone
+	console.log('request: ', sendVerifyParam)
 	request(sendVerifyParam, function (error, response, body) {
-	  if (error) throw new Error(error)
+		if (error) throw new Error(error)
 
-	  console.log('request: ', sendVerifyParam)
-	  console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
-	  console.log('body:', body) // Print the HTML for the Google homepage.
-	  res.render('sendVerifyReport', {
-	  	title: '驗證訊息發送結果',
-	  	requestId: body['request_id'],
-	  	status: body['status'],
-	  	errorText: body['error_text']
-	  })
+  		console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
+  		console.log('body:', body) // Print the HTML for the Google homepage.
+  		res.render('sendVerifyReport', {
+  			title: '驗證訊息發送結果',
+  			requestID: body['request_id'],
+  			status: body['status'],
+  			errorText: body['error_text']
+  		})
 	});
 })
 
 app.post('/checkVerify', function(req, res) {
 	checkVerifyParam.body.request_id = req.body.requestID
 	checkVerifyParam.body.code = req.body.code
+	console.log('request: ', checkVerifyParam)
 	request(checkVerifyParam, function (error, response, body) {
-	  if (error) throw new Error(error)
+		if (error) throw new Error(error)
 
-	  console.log('request: ', checkVerifyParam)
-	  console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
-	  console.log('body:', body) // Print the HTML for the Google homepage.
-	  res.render('checkVerifyReport', {
-	  	title: '驗證結果',
-	  	eventID: body['event_id'],
-	  	status: body['status'],
-	  	price: body['price'],
-	  	currency: body['currency'],
-	  	errorText: body['error_text']
-	  })
-	});
+  		console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
+		console.log('body:', body) // Print the HTML for the Google homepage.
+		res.render('checkVerifyReport', {
+			title: '驗證結果',
+			eventID: body['event_id'],
+			status: body['status'],
+			price: body['price'],
+			currency: body['currency'],
+			errorText: body['error_text']
+		})
+	})
 })
 
 app.listen(port, function () {
