@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  .main.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 驗證簡訊發送結果
+
+        // Report Table
+        table.table.table-striped
+          thead
+            tr
+              th 項目
+              th 數值
+          tbody
+            tr
+              th 請求 ID
+              th #{requestID}
+            tr
+              th 狀態
+              th #{status}
+            tr
+              th 錯誤訊息
+              th #{errorText}
+
+        //輸入驗證碼
+        form(method='POST' action='/checkVerify')
+          div.form-group
+            label(for='code') 驗證碼:
+            input#code.form-control(type='text', placeholder='輸入驗證碼' name='code')
+            input#request.form-control(type='hidden', name='requestID', value=#{requestID})
+          button.btn.btn-primary(type='submit') 送出

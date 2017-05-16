@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  .main.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 驗證簡訊發送結果
+
+        // Report Table
+        table.table.table-striped
+          thead
+            tr
+              th 項目
+              th 數值
+          tbody
+            tr
+              th 事件 ID
+              th #{eventID}
+            tr
+              th 狀態
+              th #{status}
+            tr
+              th 價格
+              th #{price}
+            tr
+              th 幣值
+              th #{currency}
+            tr
+              th 錯誤訊息
+              th #{error}

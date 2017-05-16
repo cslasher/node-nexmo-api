@@ -8,7 +8,8 @@ var ip = process.env.IP||'127.0.0.1'
 
 var request = require("request");
 
-var options = {
+var sendParam =
+{
 	method: 'POST',
 	url: 'https://rest.nexmo.com/sms/json',
 	headers:
@@ -18,12 +19,44 @@ var options = {
 	{
 		api_key: process.env.API_KEY,
 		api_secret: process.env.API_SECRET,
-		to: '886973013134',
+		to: '<phoneNumber>',
 		from: 'NEXMO',
 		text: '測試 2！！',
-		type: 'unicode' },
+		type: 'unicode'
+	},
 		json: true
-	};
+};
+
+var sendVerifyParam = {
+	method: 'POST',
+	url: 'https://api.nexmo.com/verify/json',
+	headers:
+	{
+	'content-type': 'application/json'
+	},
+	body:
+	{
+		api_key: process.env.API_KEY,
+		api_secret: process.env.API_SECRET,
+		number: '<phoneNumber>',
+		brand: 'MyApp'
+	}
+}
+
+var checkVerifyParam = {
+	method: 'POST',
+	url: 'https://api.nexmo.com/verify/check/json',
+	headers:
+	{ 'cache-control': 'no-cache',
+	'content-type': 'application/json' },
+	body:
+	{
+		api_key: process.env.API_KEY,
+		api_secret: process.env.API_SECRET,
+		request_id: '<request_id>',
+		code: '<code>'
+	}
+}
 
 app.use(bodyParser.urlencoded({extended: false}))
 
@@ -36,12 +69,12 @@ app.get('/', function(req, res) {
 })
 
 app.post('/send', function(req, res) {
-	options.body.to = req.body.phone
-	options.body.text = req.body.message
-	request(options, function (error, response, body) {
+	sendParam.body.to = req.body.phone
+	sendParam.body.text = req.body.message
+	request(sendParam, function (error, response, body) {
 	  if (error) throw new Error(error)
 
-	  console.log('request: ', options)
+	  console.log('request: ', sendParam)
 	  console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
 	  console.log('body:', body) // Print the HTML for the Google homepage.
 	  res.render('sendReport', {
@@ -55,7 +88,43 @@ app.post('/send', function(req, res) {
 	  	network: body['messages'][0]['network']
 	  })
 	});
+})
 
+app.post('/sendVerify', function(req, res) {
+	sendVerifyParam.body.number = req.body.phone
+	request(sendVerifyParam, function (error, response, body) {
+	  if (error) throw new Error(error)
+
+	  console.log('request: ', sendVerifyParam)
+	  console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
+	  console.log('body:', body) // Print the HTML for the Google homepage.
+	  res.render('sendVerifyReport', {
+	  	title: '驗證訊息發送結果',
+	  	requestId: body['request_id'],
+	  	status: body['status'],
+	  	errorText: body['error_text']
+	  })
+	});
+})
+
+app.post('/checkVerify', function(req, res) {
+	checkVerifyParam.body.request_id = req.body.requestID
+	checkVerifyParam.body.code = req.body.code
+	request(checkVerifyParam, function (error, response, body) {
+	  if (error) throw new Error(error)
+
+	  console.log('request: ', checkVerifyParam)
+	  console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
+	  console.log('body:', body) // Print the HTML for the Google homepage.
+	  res.render('checkVerifyReport', {
+	  	title: '驗證結果',
+	  	eventID: body['event_id'],
+	  	status: body['status'],
+	  	price: body['price'],
+	  	currency: body['currency'],
+	  	errorText: body['error_text']
+	  })
+	});
 })
 
 app.listen(port, function () {
