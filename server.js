@@ -15,7 +15,8 @@ var options = {
 	{ 'cache-control': 'no-cache',
 	'content-type': 'application/json' },
 	body:
-	{ api_key: process.env.API_KEY,
+	{
+		api_key: process.env.API_KEY,
 		api_secret: process.env.API_SECRET,
 		to: '886973013134',
 		from: 'NEXMO',
@@ -24,19 +25,14 @@ var options = {
 		json: true
 	};
 
-// request(options, function (error, response, body) {
-//   if (error) throw new Error(error);
-
-//   console.log(body);
-// });
-
-
 app.use(bodyParser.urlencoded({extended: false}))
 
 app.set('view engine', 'pug')
 
 app.get('/', function(req, res) {
-	res.render('send', {title: '發送簡訊'})
+	res.render('index', {title: 'Nexmo 簡訊測試'})
+	// res.render('send', {title: '發送簡訊'})
+
 })
 
 app.post('/send', function(req, res) {
@@ -45,9 +41,11 @@ app.post('/send', function(req, res) {
 	request(options, function (error, response, body) {
 	  if (error) throw new Error(error)
 
+	  console.log('request: ', options)
 	  console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
 	  console.log('body:', body) // Print the HTML for the Google homepage.
 	  res.render('sendReport', {
+	  	title: '簡訊發送結果',
 	  	messageCount: body['message-count'],
 	  	to: body['messages'][0]['to'],
 	  	messageId: body['messages'][0]['message-id'],

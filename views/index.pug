@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  .main.container
+    .row
+      .col-md-6.col-md-offset-3
+        h1.display-4.m-b-2 Nexmo 功能測試
+
+        ul.nav.nav-tabs
+          li.active
+            a(data-toggle='tab', href='#send') 傳送簡訊
+          li
+            a(data-toggle='tab', href='#verify') 簡訊驗證
+
+        div.tab-content
+          div#send.tab-pane.fade.in.active
+            // register form
+            form(method='POST' action='/send')
+              div.form-group
+                label(for='phone') 手機號碼:
+                input#name.form-control(type='text', placeholder='手機號碼，如「886912345678」' name='phone')
+              div.form-group
+                label(for='message') 簡訊內容:
+                input#email.form-control(type='text', placeholder='簡訊內容' name='message')
+              button.btn.btn-primary(type='submit') 送出
+          div#verify.tab-pane.fade
+            p 簡訊驗證
