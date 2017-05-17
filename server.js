@@ -98,7 +98,7 @@ app.post('/send', function(req, res) {
 app.post('/sendVerify', function(req, res) {
 	sendVerifyParam.body.number = req.body.phone
 	winston.log('info', 'Send Verify Request: ', {
-		number: sendVerifyParam.body.phone
+		number: sendVerifyParam.body.number
 	})
 	request(sendVerifyParam, function (error, response, body) {
 		if (error) throw new Error(error)
