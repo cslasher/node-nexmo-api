@@ -1,5 +1,6 @@
 # Nexmo API Tests
 [![StackShare](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/cslasher/node-nexmo-api)
+
 Node.js下的 Nexmo 簡訊發送與簡訊驗證
 
 ## 安裝
@@ -21,3 +22,6 @@ npm start
 
 ## Contributor
 Edwin L.
+
+## License
+[MIT](https://github.com/cslasher/node-nexmo-api/blob/master/LICENSE)

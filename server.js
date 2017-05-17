@@ -1,12 +1,14 @@
 var express = require('express')
-var logger = require('morgan')
+var morgan = require('morgan')
 var app = express()
 var bodyParser = require('body-parser')
+var winston = require('winston')
+var request = require("request");
 
 var port = process.env.PORT||3000
 var ip = process.env.IP||'127.0.0.1'
 
-var request = require("request");
+winston.level = process.env.LOG_LEVEL
 
 var sendParam =
 {
@@ -61,6 +63,7 @@ var checkVerifyParam = {
 	}
 
 app.use(bodyParser.urlencoded({extended: false}))
+app.use(morgan('short'))
 
 app.set('view engine', 'pug')
 
@@ -71,12 +74,11 @@ app.get('/', function(req, res) {
 app.post('/send', function(req, res) {
 	sendParam.body.to = req.body.phone
 	sendParam.body.text = req.body.message
+	winston.log('debug', 'request: ', sendParam)
 	request(sendParam, function (error, response, body) {
 		if (error) throw new Error(error)
 
-		console.log('request: ', sendParam)
-  		console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
-  		console.log('body:', body) // Print the HTML for the Google homepage.
+  		winston.log('info', 'body:', body) // Print the HTML for the Google homepage.
   		res.render('sendReport', {
   			title: '簡訊發送結果',
   			messageCount: body['message-count'],
@@ -92,12 +94,11 @@ app.post('/send', function(req, res) {
 
 app.post('/sendVerify', function(req, res) {
 	sendVerifyParam.body.number = req.body.phone
-	console.log('request: ', sendVerifyParam)
+	winston.log('debug', 'request: ', sendVerifyParam)
 	request(sendVerifyParam, function (error, response, body) {
 		if (error) throw new Error(error)
 
-  		console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
-  		console.log('body:', body) // Print the HTML for the Google homepage.
+  		winston.log('info', 'body:', body) // Print the HTML for the Google homepage.
   		res.render('sendVerifyReport', {
   			title: '驗證訊息發送結果',
   			requestID: body['request_id'],
@@ -110,12 +111,11 @@ app.post('/sendVerify', function(req, res) {
 app.post('/checkVerify', function(req, res) {
 	checkVerifyParam.body.request_id = req.body.requestID
 	checkVerifyParam.body.code = req.body.code
-	console.log('request: ', checkVerifyParam)
+	winston.log('debug', 'request: ', checkVerifyParam)
 	request(checkVerifyParam, function (error, response, body) {
 		if (error) throw new Error(error)
 
-  		console.log('statusCode:', response && response.statusCode) // Print the response status code if a response was received
-		console.log('body:', body) // Print the HTML for the Google homepage.
+		winston.log('info', 'body:', body) // Print the HTML for the Google homepage.
 		res.render('checkVerifyReport', {
 			title: '驗證結果',
 			eventID: body['event_id'],
@@ -128,6 +128,6 @@ app.post('/checkVerify', function(req, res) {
 })
 
 app.listen(port, function () {
-	console.log(`Listening on ${ip}: ${port}...`)
+	winston.log('info', `Listening on ${ip}: ${port}...`)
 })
 
