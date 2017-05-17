@@ -74,11 +74,14 @@ app.get('/', function(req, res) {
 app.post('/send', function(req, res) {
 	sendParam.body.to = req.body.phone
 	sendParam.body.text = req.body.message
-	winston.log('debug', 'request: ', sendParam)
+	winston.log('info', 'Send Request: ', {
+		to: sendParam.body.to,
+		text: sendParam.body.text
+	})
 	request(sendParam, function (error, response, body) {
 		if (error) throw new Error(error)
 
-  		winston.log('info', 'body:', body) // Print the HTML for the Google homepage.
+  		winston.log('info', 'Send Response:', body)
   		res.render('sendReport', {
   			title: '簡訊發送結果',
   			messageCount: body['message-count'],
@@ -94,11 +97,13 @@ app.post('/send', function(req, res) {
 
 app.post('/sendVerify', function(req, res) {
 	sendVerifyParam.body.number = req.body.phone
-	winston.log('debug', 'request: ', sendVerifyParam)
+	winston.log('info', 'Send Verify Request: ', {
+		number: sendVerifyParam.body.phone
+	})
 	request(sendVerifyParam, function (error, response, body) {
 		if (error) throw new Error(error)
 
-  		winston.log('info', 'body:', body) // Print the HTML for the Google homepage.
+  		winston.log('info', 'Send Verify Response:', body)
   		res.render('sendVerifyReport', {
   			title: '驗證訊息發送結果',
   			requestID: body['request_id'],
@@ -111,11 +116,13 @@ app.post('/sendVerify', function(req, res) {
 app.post('/checkVerify', function(req, res) {
 	checkVerifyParam.body.request_id = req.body.requestID
 	checkVerifyParam.body.code = req.body.code
-	winston.log('debug', 'request: ', checkVerifyParam)
+	winston.log('info', 'Check Verify Request: ', {
+		requestID: checkVerifyParam.body.request_id
+	})
 	request(checkVerifyParam, function (error, response, body) {
 		if (error) throw new Error(error)
 
-		winston.log('info', 'body:', body) // Print the HTML for the Google homepage.
+		winston.log('info', 'Check Verify Response:', body)
 		res.render('checkVerifyReport', {
 			title: '驗證結果',
 			eventID: body['event_id'],
